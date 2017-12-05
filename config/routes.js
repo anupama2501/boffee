@@ -1,79 +1,207 @@
-
 module.exports = function(app) {
+
+    var Kairos = require('kairos-api');
+    var client = new Kairos('3bb95958', 'c2bee2d3c2168022c2908b75bf7dbb0e');
 
     getTimestamp = function() {
         var date = new Date();
-        var ts = "" + date.getFullYear() + 
-        ('0' + (date.getMonth() + 1)).slice(-2) + 
-        ('0' + date.getDate()).slice(-2) + 
-        ('0' + date.getHours()).slice(-2) + 
-        ('0' + date.getMinutes()).slice(-2) + 
-        ('0' + date.getSeconds()).slice(-2) +
-        ('00' + date.getMilliseconds()).slice(-3);
+        var ts = "" + date.getFullYear() +
+            ('0' + (date.getMonth() + 1)).slice(-2) +
+            ('0' + date.getDate()).slice(-2) +
+            ('0' + date.getHours()).slice(-2) +
+            ('0' + date.getMinutes()).slice(-2) +
+            ('0' + date.getSeconds()).slice(-2) +
+            ('00' + date.getMilliseconds()).slice(-3);
         return ts;
     }
 
-    function decodeBase64Image(dataString) {
+    /*function mongoCalls(){
+        var mongojs = require('mongojs');
+        var db = mongojs('boffee', ['users']);
 
-      var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
-        response = {};
+        //Insert User to database
+        var orders = [];
+        var images = [];
+        var user = {
+            subject_id: <TBU>,
+            face_id: <>,
+            orders: orders,
+            images:images,
+            dateTime: new Date("<YYYY-mm-ddTHH:MM:ss>")
+        }
 
-      if (matches.length !== 3) {
-        return new Error('Invalid input string');
-      }
+        db.users.insert(user, function(err, doc) {
+            if (err) {
+                res.send(err);
+            }
+        });
 
-      response.type = matches[1];
-      response.data = new Buffer(matches[2], 'base64');
+        db.users.update({
+            face_id: <TBU>
+            }, {
+                $addToSet: {
+                    orders: <TBU>,
+                    images: <TBU>
+                }
+            }, function(err, returnvalue) {
+                if (err) {
+                    return console.dir(err);
+                } else {
+                    console.log("Updated successfully");
+                }
+        });
 
-      return response;
+
+        db.users.find({
+                face_id: <TBU>
+            }).sort({
+                priority: 1
+            }, function(err, returnvalue) {
+                if (err) {
+                    return console.dir(err);
+                }
+                console.log(returnvalue);
+        });
+    }*/
+
+    /*function decodeBase64Image(dataString) {
+        var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+            response = {};
+        if (matches.length !== 3) {
+            return new Error('Invalid input string');
+        }
+        response.type = matches[1];
+        response.data = new Buffer(matches[2], 'base64');
+        return response;
+    }*/
+
+  /*  function enrollImage(imageData) {
+        console.log("Inside user enroll");
+        var params = {
+              image: imageData,
+              subject_id: 'ashok',
+              gallery_name: 'boffee'
+        };
+
+        client.enroll(params)
+          .then(function(result) {
+            console.log(result.body.face_id);
+            console.log(result.body.uploaded_image_url);
+          })
+          .catch(function(err) { 
+            console.log(err);
+          });
     }
+*/
+   /* function recognizeImage(imageData) {
+        console.log("Inside recognize flow");
+        var params = {
+              image: imageData,
+              gallery_name: 'boffee'
+        };
+        client.recognize(params) 
+          .then(function(result) {
+            //console.log(result.body.images[0].transaction);
+            //console.log(result.body.images[0].candidates);
+            if(result.body.images[0].transaction.status === "failure"){
+                console.log("User not registerd..enrolling user");
+                enrollImage(imageData , function(err, returnvalue){
+                    if(err){
+                       return console.dir(err);
+                    }
+                    else{
+                        console.log('Inside the response block------------');    
+                    }
+                    
+                });
+            }else{
 
-    // testing routes work
-    app.get('/', function(req, res) {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write('webcam');
-        res.end();
+                console.log(result.body.images[0].candidates[0].subject_id);
+                console.log(result.body.images[0].candidates[0].face_id);
+                return "success";
+            }
+          })
+          .catch(function(err) { 
+            console.log(err);
+          });
+    }*/
+
+    app.post('/checkout',function(req, res) {
+        console.log(req.body);
+        return 'Posted successfully'
     });
 
-    app.post('/photo', function (req, res) {
+    app.get('/home', function(req, res) {
+       res.render('home');
+    });
 
+    app.get('/', function(req, res) {
+        res.render('index');
+    });
+    
+    app.post('/photo', function(req, res) {
         var now = getTimestamp();
-
-        console.log('photo - ' + now);
-
-        var image = req.body.image;
-
-        // NEED to handle ALL potential errors
-
-        if (image == undefined) {
-
+        var imageData = req.body.image;
+        console.log(req.body.subject_id);
+        console.log("Inside submission")
+        if (imageData == undefined) {
             console.log('/photo - MISSING image');
+            res.render('index');
+        } else {
+            //console.log("Now going in recognizeImage function ");
+            /*recognizeImage(image , function(err, returnvalue){
+                if(err){
+                   return console.dir(err);
+                }else{
+                    console.log('Inside the response blockAAAAAA');    
+                }
 
-            res.writeHeader(200, {"Content-Type": "application/json"});
-            res.end(JSON.stringify({ "filename" : null }));
 
-        }
-        else {
+                
+                
+            });*/
+            //Define parameters
+              console.log("Inside recognize flow");
+        var params = {
+              image: imageData,
+              gallery_name: 'boffee'
+        };
+        client.recognize(params) 
+          .then(function(result) {
+            //console.log(result.body.images[0].transaction);
+            //console.log(result.body.images[0].candidates);
+            if(result.body.images[0].transaction.status === "failure"){
+                console.log("User not registerd..enrolling user");
+                //enrollImage(imageData);
+             var params = {
+              image: imageData,
+              subject_id: 'ashok',
+              gallery_name: 'boffee'
+        };
 
-            var imageBuffer = decodeBase64Image(image);
+        client.enroll(params)
+          .then(function(result) {
             
-            // console.log(imageBuffer);
+            console.log(result.body.face_id);
+            console.log(result.body.uploaded_image_url);
+            res.redirect("/home");
+          })
+          .catch(function(err) { 
+            console.log(err);
+          });
 
-            // { type: 'image/jpeg',
-            //   data: <Buffer 89 50 4e 47 0d 0a 1a 0a 00 00 00 0d 49 48 44 52 00 00 00 b4 00 00 00 2b 08 06 00 00 00 d1 fd a2 a4 00 00 00 04 67 41 4d 41 00 00 af c8 37 05 8a e9 00 00 ...> }
-
-            var fs = require('fs');
-
-            fs.mkdir('static/grabs/', function() {
-                var filename = 'grabs/' + now + '.jpg';
-                fs.writeFile('static/' + filename, imageBuffer.data, function(err) {
-        
-                    res.writeHeader(200, {"Content-Type": "application/json"});
-                    res.end(JSON.stringify({ "filename" : filename }));
-
-                })
-            })        
+            }else{
+                console.log("Rendering the homepage")    
+                console.log(result.body.images[0].candidates[0].subject_id);
+                console.log(result.body.images[0].candidates[0].face_id);
+                res.send('home');
+            }
+          })
+          .catch(function(err) { 
+            console.log(err);
+          });
+           
+            console.log('doneWorks');
         }
     })
-
 }

@@ -1,0 +1,91 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+img,
+video {
+    display: block;
+}
+#wrapper {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+}
+#playerHolder {
+    width: 100%;
+}
+#player {
+    width: 100%;
+}
+
+.size_btn{
+    clear: both;
+    width: 30px;
+    height: 50px;
+    line-height: 30px;
+    text-align: center;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.item{
+    border-size:2px;
+    border-style:solid;
+    border-color:black;
+    height: 200px;
+    width:200px;
+}
+
+.sample{
+    border-size:2px;
+    border-style:solid;
+    border-color:black;
+}
+
+.myButton {
+    clear: both;
+    width: 150px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.submitHolder{
+    text-align: center;
+}
+
+.store_id{
+    padding-left: 150px;   
+    padding-right: 150px;
+}
+
+.store_id_text{
+    padding-left: 200px;   
+    padding-right: 150px;
+}
+
+#takePhotoButton {
+    background-color: green;
+}
+#takePhotoButton.busy {
+    background-color: red;
+}
+#toggleStopMotion {
+    background-color: #e5e5e5;
+}
+#canvas {
+    display: none;
+}
+#photosHolder {
+    clear: both;
+}
+.photoHolder {
+    float: left;
+    width: 50%;
+    text-align: center;
+}
+.photoHolder img {
+    width: 100%;
+}
