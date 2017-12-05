@@ -1,7 +1,7 @@
 module.exports = function(app) {
 
     var Kairos = require('kairos-api');
-    var client = new Kairos('3bb95958', 'c2bee2d3c2168022c2908b75bf7dbb0e');
+    var client = new Kairos('<API_ID>', '<API_KEY>');
 
     getTimestamp = function() {
         var date = new Date();
@@ -148,18 +148,6 @@ module.exports = function(app) {
             console.log('/photo - MISSING image');
             res.render('index');
         } else {
-            //console.log("Now going in recognizeImage function ");
-            /*recognizeImage(image , function(err, returnvalue){
-                if(err){
-                   return console.dir(err);
-                }else{
-                    console.log('Inside the response blockAAAAAA');    
-                }
-
-
-                
-                
-            });*/
             //Define parameters
               console.log("Inside recognize flow");
         var params = {
